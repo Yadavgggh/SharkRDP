@@ -1,0 +1,21 @@
+name: Use Windows Credentials
+
+on: [push]
+
+jobs:
+  use-credentials:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Use Windows Credentials
+      run: |
+        echo "Setting up Windows credentials"
+        powershell -Command "
+        \$credential = New-Object System.Management.Automation.PSCredential(
+            '${{ secrets.MY_CREDENTIAL_USERNAME }}', 
+            (ConvertTo-SecureString '${{ secrets.MY_CREDENTIAL_PASSWORD }}' -AsPlainText -Force)
+        )
+        ; Add-WindowsCredential -Credential \$credential -Target 'YourNetworkAddress'"
